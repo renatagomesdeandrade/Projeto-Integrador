@@ -86,8 +86,8 @@ class Registro(mybd.Model):
     temperatura = mybd.Column(mybd.Numeric(10,2))
     pressao = mybd.Column(mybd.Numeric(10,2))
     altitude = mybd.Column(mybd.Numeric(10,2))
-    umidade = mybd.Column(mybd.Numeric)
-    co2 = mybd.Column(mybd.Numeric)
+    umidade = mybd.Column(mybd.Numeric(10,2))
+    co2 = mybd.Column(mybd.Numeric(10,2))
     poeira = mybd.Column(mybd.Numeric(10,2))
     tempo_registro = mybd.Column(mybd.DateTime)
     
@@ -157,6 +157,7 @@ def criar_dados():
         
         if not dados:
             return jsonify({"error:":"Nenhum dado fornecido"}), 400
+        
         print(f"Dados Recebidos: {dados}")
         temperatura = dados.get('temperatura')
         pressao = dados.get('pressao')
@@ -170,10 +171,10 @@ def criar_dados():
             tempo_oficial = datetime.fromtimestamp(int(timestamp_unix), tz=timezone.utc)
         except Exception as e:
             print("Error", e)
-            return gera_resposta
+            return jsonify({"Erro":"Timestamp inválido"}),400
 
 #******************************************************
-#Crirar o objeto de Registro
+#Criar o objeto de Registro
         novo_registro = Registro(
             temperatura=temperatura,
             pressao=pressao,
